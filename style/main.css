@@ -1,0 +1,83 @@
+ html,body{
+   margin: 0;
+   padding: 0;
+   font-family: Helvetica;
+ }
+ h1,h2,h3,h4{
+   margin: 0;
+   padding: 0;
+ }
+ #wrapper{
+   width: 320px;
+   height: 480px;
+   background: #ccc;
+ }
+ #logo h1{
+   text-align: center;
+ }
+ #counter{
+   width: 150px;
+   margin: 0 auto;
+   font-size: 3em;
+   text-align: center;
+ }
+ #countertext{
+   display: block;
+   font-size: .6em;
+ }
+ #mainmenu{
+   background: #ccc;
+   //height: 55px;
+   width: 320px;
+ }
+ #mainmenu ul{
+   list-style: none;
+   margin: 0 auto;
+ }
+ #mainmenu ul li{
+   display: block-inline;
+   float: left;
+   //height: 55px;
+   padding: 20px 0;
+   //width: 75px;
+   width: 31%;
+   text-align: center;
+ }
+ #mainmenu ul li.selected{
+   background: green;
+ }
+ .flyout{
+   position: absolute;
+   left: 0;
+   top: 380px;
+   display: block;
+   height: 100px;
+   width: 320px;
+   background: #555;
+   text-align: center;
+   display: none;
+ }
+ .flyoutarrow{
+   position: relative;
+   left: 160px;
+   top: 83px;
+   display: block;
+   height: 25px;
+   width: 25px;
+   background: #555;
+   -webkit-transform: rotate(45deg);
+ }
+ .flyout ul{
+   list-style: none;
+   margin: 0 auto;
+ }
+ .flyout ul li{
+   display: block-inline;
+   float: left;
+   padding: 20px; 0;
+   width: 17%;
+   text-align: center;
+ }
+ .clear{
+   clear: both;
+ }

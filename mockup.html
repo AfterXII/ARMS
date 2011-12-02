@@ -3,151 +3,15 @@
 <html>
 
   <head>
-    <style type="text/css">
-      html,body{
-        margin: 0;
-        padding: 0;
-        font-family: Helvetica;
-      }
-      h1,h2,h3,h4{
-        margin: 0;
-        padding: 0;
-      }
-      #wrapper{
-        width: 320px;
-        height: 480px;
-        background: #ccc;
-      }
-      #logo h1{
-        text-align: center;
-      }
-      #counter{
-        width: 150px;
-        margin: 0 auto;
-        font-size: 3em;
-        text-align: center;
-      }
-      #countertext{
-        display: block;
-        font-size: .6em;
-      }
-      #mainmenu{
-        background: #ccc;
-        //height: 55px;
-        width: 320px;
-      }
-      #mainmenu ul{
-        list-style: none;
-        margin: 0 auto;
-      }
-      #mainmenu ul li{
-        display: block-inline;
-        float: left;
-        //height: 55px;
-        padding: 20px 0;
-        //width: 75px;
-        width: 31%;
-        text-align: center;
-      }
-      #mainmenu ul li.selected{
-        background: green;
-      }
-      .flyout{
-        position: absolute;
-        left: 0;
-        top: 380px;
-        display: block;
-        height: 100px;
-        width: 320px;
-        background: #555;
-        text-align: center;
-        display: none;
-      }
-      .flyoutarrow{
-        position: relative;
-        left: 160px;
-        top: 83px;
-        display: block;
-        height: 25px;
-        width: 25px;
-        background: #555;
-        -webkit-transform: rotate(45deg);
-      }
-      .flyout ul{
-        list-style: none;
-        margin: 0 auto;
-      }
-      .flyout ul li{
-        display: block-inline;
-        float: left;
-        padding: 20px; 0;
-        width: 17%;
-        text-align: center;
-      }
-      .clear{
-        clear: both;
-      }
-    </style>
+  	<link rel="stylesheet" href="style/main.css" type="text/css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+	 <script src="src/arms.js"></script>
   </head>
 
   <body onload="init()">
 
-    <script>
-      /*
-       * Changes flyout visibility for the particular element
-       * Also changes button to selected or deselected and handles disabling other elements for a clean transition
-      */
-      function changeFlyoutVisibility(name) {
-        // Get flyout (content) div
-        var flyout = $("#"+name+'_flyout');
-
-        // Get button that was clicked
-        var button = $("#"+name+'_button');
-
-        // Check if flyout is currently visible
-        if(flyout.is(":visible")) {
-          // If it is, fade it out and de-select button
-          flyout.fadeOut();
-          button.removeClass('selected');
-        } else {
-          // Otherwise, de-select all other buttons
-          $("#mainmenu").find('li').removeClass('selected');
-          
-          // Hide all flyout menus
-          $(".flyout").hide();
-         
-          // Fade in the desired flyout menu
-          flyout.fadeIn();
-
-          // Show that the current button is selected
-          button.addClass('selected');
-
-          // Position the arrow to be above the current button
-          var x = button.position().left + ( (button.width() / 2) - ( $(".flyoutarrow").width() / 2 ) );
-          flyout.find('div').css('left', x);
-        }
-      }
-
-      /*
-       * Initialization functions
-       * Set click bindings, initial position and visibility, etc.
-      */
-      function init() {
-        // Flyout click bindings
-        $("#plus_one_button").click(function() {
-          changeFlyoutVisibility('plus_one');
-        });
-        $("#settings_button").click(function() {
-          changeFlyoutVisibility('settings');
-        });
-        $("#utilities_button").click(function() {
-          changeFlyoutVisibility('utilities');
-        });
-
-        // Module click bindings
-      }
-    </script>
+	<div id="log">
+	</div>
 
     <div id="wrapper">
 
@@ -186,7 +50,6 @@
         <div class="flyoutarrow"></div>
         <div class="clear"></div>
       </div>
-
 
     </div>
     
