@@ -1,28 +1,36 @@
 function writeLog(log) {
-	return;
-  frag = '<p>' + log + '</p>';
-  $("#log").append(frag);
+	frag = '<p>' + log + '</p>';
+	$("#log").append(frag);
 }
 
 // Our global "database"
 function FauxBase() {
+	// Beer values
+	this.beer = { "calories" : 150 };
+
+	// Wine values
+	this.wine = { "calories" : 120 };
+
+	// Liquor values
+	this.liquor = { "calories" : 100 };
+	
 	// Drinks list
-	this.drinks = { "beer" : 1, "wine" : 2, "liquor" : 3};
+	this.drinks = { 	"beer"   : 	this.beer,
+							"wine"   : 	this.wine,
+							"liquor" : 	this.liquor };
 
-	/*this.drinks = {
-		1 : { "beer" : 5 },
-		2 : { "liquor" : 6 },
-		3 : { "wine" : 7 }
-	};
-
-	this.testz = {"blah" : 5};
-	this.test = $.makeArray(this.testz);
-	writeLog("value of blah is " + this.testz['blah']);*/
+	// User settings
+	//this.settings = { "name" : , "};
 
 	this.getDrinks = function() {
 		return this.drinks;
 	}
 
+	this.getSettings = function() {
+		return this.settings;
+	}
+
+	// Return value on instantiation
 	return true;
 }
 
@@ -30,6 +38,7 @@ function FauxBase() {
 function DatabaseManager() {
 	this.currentDatabase = null;
 
+	// Grab our actual data
 	this.base = new FauxBase();
 	
 	this.loadTable = function(tableName) {
@@ -46,27 +55,28 @@ function DatabaseManager() {
 		return this.currentDatabase;
 	};
 
-	this.findValueOf = function(valueName) {
+	this.getValueOf = function(valueName) {
 		writeLog("Finding value of " + valueName + " ... ");
-		
-		var index = -1;
-		var i;
-		for(i = 0; i < 3; i++) {
-			writeLog("comparing " + valueName + " to " + this.currentDatabase[i]);
-			if(this.currentDatabase[i] == valueName.toLowerCase()) {
-				index = i;
+
+		// Default return value is -1 for not found
+		var ret = -1;
+
+		if(this.currentDatabase != null) {
+			writeLog("Not null");
+			for(key in this.currentDatabase) {
+				if(key == valueName) {
+					ret = this.currentDatabase[key];
+				}
 			}
+		} else {
+			// No table loaded
 		}
 
-		if(index != -1) {
-			writeLog("Item found");
-			return this.currentDatabase[index];
-		} else {
-			writeLog("Item not found.");
-			return -1;
-		}
+		return ret;
+
 	};
 
+	// Return value on instantiation
 	return true;
 }
 
@@ -123,8 +133,9 @@ function runTests() {
 	dbManager = new DatabaseManager();
 	dbManager.loadTable("drinks");
 	var table = dbManager.getDatabase();
-	var beerVal = dbManager.findValueOf("beer");
+	var beerVal = dbManager.getValueOf("beer");
 	writeLog("Value for beer is " + beerVal);
+	writeLog("Calories for beer is " + beerVal["calories"]);
 }
 
 /*
@@ -134,7 +145,7 @@ function runTests() {
 function init() {
 	writeLog("blah");
 	// Run tests
-	//runTests();
+	runTests();
 
   // Flyout click bindings
   $("#plus_one_button").click(function() {
