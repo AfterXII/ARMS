@@ -113,6 +113,21 @@ function DatabaseManager() {
 
 	};
 
+	// Set value of a particular entry in the table
+	// Returns false if key not found, true if setting changed
+	this.setValueOf = function(key, value) {
+		// Check that we've loaded a database first
+		if(this.currentDatabase != null) {
+			for(key in this.currentDatabase) {
+				if(key == valueName) {
+					this.currentDatabase[key] = value;
+					return true;
+				}
+			}
+		}
+		return false;
+	};
+
 	// Return value on instantiation
 	return true;
 }
@@ -128,6 +143,21 @@ function addDrink(drinkName) {
 	// Check if drink is in the "database"
 	if(dbManager.getValueOf(drinkName) != -1) {
 		// Get the value for the entry
+	}
+}
+
+// Adjust user configuration setting
+function setConfigurationValue(key, value) {
+	dbManager = new DatabaseManager();
+
+	dbManager.loadTable("settings");
+
+	key = key.toLowerCase();
+
+	// Check that setting exists first
+	if(dbManager.getValueOf(key) != -1) {
+		// If it does, set new value
+		return dbManager.setValueOf(key, value));
 	}
 }
 
