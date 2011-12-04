@@ -1,4 +1,5 @@
 function writeLog(log) {
+	return;
 	frag = '<p>' + log + '</p>';
 	$("#log").append(frag);
 }
@@ -7,17 +8,20 @@ function writeLog(log) {
 function FauxBase() {
 	// Beer values
 	this.beer = {
-		"calories" : 150
+		"name" 		: "beer",
+		"calories" 	: 150
 	};
 
 	// Wine values
 	this.wine = {
-		"calories" : 120
+		"name" 		: "wine",
+		"calories" 	: 120
 	};
 
 	// Liquor values
 	this.liquor = {
-		"calories" : 100
+		"name" 		: "liquor",
+		"calories" 	: 100
 	};
 	
 	// Drinks list
@@ -95,7 +99,7 @@ function DatabaseManager() {
 	this.getValueOf = function(valueName) {
 		writeLog("Finding value of " + valueName + " ... ");
 
-		// Default return value is -1 for not found
+		// Default return value is -1 for error 
 		var ret = -1;
 
 		if(this.currentDatabase != null) {
@@ -105,8 +109,6 @@ function DatabaseManager() {
 					ret = this.currentDatabase[key];
 				}
 			}
-		} else {
-			// No table loaded
 		}
 
 		return ret;
@@ -157,7 +159,7 @@ function setConfigurationValue(key, value) {
 	// Check that setting exists first
 	if(dbManager.getValueOf(key) != -1) {
 		// If it does, set new value
-		return dbManager.setValueOf(key, value));
+		return dbManager.setValueOf(key, value);
 	}
 }
 
@@ -171,6 +173,16 @@ function changeFlyoutVisibility(name) {
 
 	// Get button that was clicked
 	var button = $("#"+name+'_button');
+
+	var arrow = flyout.find('div');
+	//arrow.css("background-color", "green");
+
+	// Set position for flyout based on height
+	var h = flyout.height();
+	var t = $("#mainmenu").position().top;
+	var a = $(".flyoutarrow").height();
+	flyout.css("top", t - h);
+	arrow.css("top", h - (a/2));
 
 	// Check if flyout is currently visible
 	if(flyout.is(":visible")) {
@@ -203,6 +215,15 @@ function runTests() {
 	var beerVal = dbManager.getValueOf("beer");
 	writeLog("Value for beer is " + beerVal);
 	writeLog("Calories for beer is " + beerVal["calories"]);
+	writeLog("Name for beer is " + beerVal["name"]);
+
+	// Test print settings
+	writeLog("Settings:");
+	dbManager.loadTable("settings");
+	var settingsVal = dbManager.getDatabase();
+	for(key in settingsVal) {
+		writeLog(key + " : " + settingsVal[key]);
+	}
 }
 
 /*
@@ -225,4 +246,14 @@ function init() {
 	$("#utilities_button").click(function() {
 		changeFlyoutVisibility('utilities');
 	});
+
+	// Load all settings as buttons into settings flyout
+	var elem = $("#settings_list");
+	dbManager = new DatabaseManager();
+	dbManager.loadTable("settings");
+	var settingsList = dbManager.getDatabase();
+	for(key in settingsList) {
+		var frag = "<li>" + key + "</li>";
+		elem.append(frag);
+	}
 }
