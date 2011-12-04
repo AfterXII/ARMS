@@ -30,9 +30,9 @@ drinks = {
 // All default limit values are the legal limit
 // All settings deemed to be a safety feature are true by default
 settings = {
-	"weight" 				: "", 		// Integer
-	"sex" 					: "", 		// String
-	"name" 					: "", 		// String
+	"weight" 				: 150, 		// Integer
+	"sex" 					: "male", 		// String
+	"name" 					: "John Doe", 		// String
 	"contactlocklimit" 	: 0.8, 		// Float, BAC value
 	"calltaxionlimit" 	: true, 		// Boolean
 	"calltaxilimit" 		: 0.8, 		// Float, BAC value
@@ -51,8 +51,8 @@ utilities = {
 // Current data for this session
 currentData = {
 	"grams" 		: 1, 	// Grams of alcohol consumed
-	"drinks" 	: 1, 	// Number of drinks consumed
-	"calories" 	: 1, 	// Number of calories consumed
+	"drinks" 	: 0, 	// Number of drinks consumed
+	"calories" 	: 0, 	// Number of calories consumed
 	"bac" 		: 0 	// Current BAC
 };
 
@@ -61,7 +61,7 @@ currentData = {
 //
 
 function writeLog(log) {
-	//return;
+	return;
 	frag = '<p>' + log + '</p>';
 	$("#log").append(frag);
 }
@@ -70,22 +70,18 @@ function writeLog(log) {
 function FauxBase() {
 	
 	this.getDrinks = function() {
-		//return this.drinks;
 		return drinks;
 	}
 
 	this.getSettings = function() {
-		//return this.settings;
 		return settings;
 	}
 
 	this.getUtilities = function() {
-		//return this.utilities;
 		return utilities;
 	}
 
 	this.getCurrentData = function() {
-		//return this.currentData;
 		return currentData;
 	}
 
@@ -236,10 +232,21 @@ function refreshGUIElements() {
 	writeLog("Refreshing GUI elements. BAC is " + currentBAC + " and # drinks is " + numDrinks);
 
 	// Calculate percentage to user limit
-	var userLimitPercentage = userLimit / currentBAC;
+	var userLimitPercentage = (currentBAC / userLimit) * 10;
+	writeLog("Percentage to user limit is " + userLimitPercentage);
 
 	// Calculate percentage to legal limit
-	var legalLimitPercentage = legalLimit / currentBAC;
+	var legalLimitPercentage = (currentBAC / legalLimit) * 10;
+
+	// Make sure we don't expand over the container...
+	if(userLimitPercentage * 100 >= 100) {
+		userLimitPercentage = 100;
+		$("#userlim_progress").css("background-color", "red");
+	}
+	if(legalLimitPercentage * 100 >= 100) {
+		legalLimitPercentage = 100;
+		$("#legallim_progress").css("background-color", "red");
+	}
 
 	// Update both progress bars
 	var progressWidth; 	// Width of progress bar container
@@ -259,6 +266,7 @@ function refreshGUIElements() {
 	$("#counter_num").html(numDrinks);
 
 	// Update BAC display with grabbed value
+	$("#bac_num").html(currentBAC);
 }
 
 // Adjust user configuration setting
@@ -429,4 +437,7 @@ function init() {
 		var frag = "<li>" + key + "</li>";
 		elem.append(frag);
 	}
+
+	// Load in all current settings
+	refreshGUIElements();
 }
