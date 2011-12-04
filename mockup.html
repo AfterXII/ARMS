@@ -10,9 +10,6 @@
 
   <body onload="init()">
 
-	<div id="log">
-	</div>
-
     <div id="wrapper">
 
       <div id="logo">
@@ -20,36 +17,52 @@
       </div>
 
       <div id="counter">
-        7
+        <span id="counter_num">7</span>
         <div id="countertext">
           drinks consumed
         </div>
       </div>
 
-      <div id="userlim_progress_container" class="progress_container">
-      </div>
+		<div id="bac_num"></div>
+	
+		<div id="progress">
+			Progress to user limit:
+			<div id="userlim_progress_container" class="progress_container">
+				<div id="userlim_progress" class="progress"></div>
+			</div>
 
-      <div id="legallim_progress_container" class="progress_container">
-      </div>
+			Progress to legal limit:
+			<div id="legallim_progress_container" class="progress_container">
+				<div id="legallim_progress" class="progress"></div>
+			</div>
+		</div>
 
       <div class="flyout" id="settings_flyout">
         <div class="flyoutarrow"></div>
+		  <ul id="settings_list">
+		  </ul>
         <div class="clear"></div>
       </div>
 
       <div class="flyout" id="plus_one_flyout">
         <div class="flyoutarrow"></div>
         <ul>
-          <li>Wine</li>
-          <li>Liquor</li>
-          <li>Beer</li>
+          <li id="wine_button">Wine</li>
+          <li id="liquor_button">Liquor</li>
+          <li id="beer_button">Beer</li>
         </ul>
         <div class="clear"></div>
       </div>
       <div class="flyout" id="utilities_flyout">
         <div class="flyoutarrow"></div>
+		  <ul id="utilities_list">
+		  </ul>
         <div class="clear"></div>
       </div>
+
+		<div class="alertbox" id="alertbox"></div>
+
+		<div class="alertbox" id="taxilist">Taxis</div>
 
     </div>
     
@@ -62,6 +75,9 @@
       <div class="clear"></div>
     </div>
 
+	<div id="log">
+	</div>
+  
   </body>
 
 </html>

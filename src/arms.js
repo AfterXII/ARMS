@@ -33,9 +33,9 @@ settings = {
 	"weight" 				: 150, 		// Integer
 	"sex" 					: "male", 		// String
 	"name" 					: "John Doe", 		// String
-	"contactlocklimit" 	: 0.8, 		// Float, BAC value
+	"contactlocklimit" 	: 0.08, 		// Float, BAC value
 	"calltaxionlimit" 	: true, 		// Boolean
-	"calltaxilimit" 		: 0.8, 		// Float, BAC value
+	"calltaxilimit" 		: 0.08, 		// Float, BAC value
 	"usegps" 				: true, 		// Boolean
 	"baccalculate" 		: true, 		// Boolean
 	"cachetaxi" 			: true, 		// Boolean
@@ -44,9 +44,11 @@ settings = {
 };
 
 utilities = {
-	"tools" 	: "1",
-	"histogram" :	"histogram"
+	"tools" 	: "",
+	"histogram" :	""
 };
+
+yesNoButtons = "<div class=\"button\" id=\"yes_button\">Yes</div><div class=\"button\" id=\"no_button\">No</div>";
 
 // Current data for this session
 currentData = {
@@ -55,6 +57,9 @@ currentData = {
 	"calories" 	: 0, 	// Number of calories consumed
 	"bac" 		: 0 	// Current BAC
 };
+
+// Table for consumed drinks - for histogram, reporting, etc.
+consumed = [];
 
 //
 // Start actual ARMS module code
@@ -176,8 +181,19 @@ function DatabaseManager() {
 	return true;
 }
 
+// Drink class
+// Used exclusively for adding drink history to table "consumed"
+function Drink(drinkName, timestamp) {
+	this.name = drinkName;
+	this.timestamp = timestamp;
+}
+
 // Add a drink to our consumption table
 function addDrink(drinkName) {
+	// Add drink to consumed table
+	thisDrink = new Drink(drinkName, null); // Null timestamp - this will be supported with SQLLite
+	consumed.push(thisDrink);
+
 	dbManager = new DatabaseManager();
 
 	dbManager.loadTable("drinks");
@@ -214,6 +230,33 @@ function addDrink(drinkName) {
 	}
 }
 
+function showUserAlert(alertType) {
+	writeLog("Showing user alert type " + alertType);
+	var frag;
+	var fluke = false;
+	switch(alertType.toLowerCase()) {
+		case "userlimit":
+			frag = "You have reached your defined limit! Would you like to see a list of nearby taxi services?";
+			break;
+		case "legallimit":
+			frag = "You have reached the legal limit! Would you like to see a list of nearby taxi services?";
+			break;
+		default:
+			fluke = true;
+			break;
+	}
+
+	// If the alert was valid, show it
+	if(!fluke) {
+		var elem = $("#alertbox");
+		elem.html(frag + yesNoButtons);
+		elem.show();
+	}
+
+	// Add click bindings to buttons
+	setAlertBindings();
+}
+
 function refreshGUIElements() {
 	writeLog("Refreshing GUI elements...");
 	var dbManager = new DatabaseManager();
@@ -221,7 +264,7 @@ function refreshGUIElements() {
 	// Load settings table, get user defined BAC limit
 	dbManager.loadTable("settings");
 	var userLimit = dbManager.getValueOf("calltaxilimit");
-	var legalLimit = 0.8;
+	var legalLimit = 0.08;
 
 	// Load data table, get current BAC and # of drinks
 	//dbManager = new DatabaseManager();
@@ -230,13 +273,22 @@ function refreshGUIElements() {
 	writeLog("Current BAC is " + currentBAC);
 	var numDrinks = dbManager.getValueOf("drinks");
 	writeLog("Refreshing GUI elements. BAC is " + currentBAC + " and # drinks is " + numDrinks);
+	
+	// Let's check if we've reached either limit
+	// Alert the user if this is the case
+	if(currentBAC >= userLimit) {
+		showUserAlert("userlimit");
+	}
+	if(currentBAC >= legalLimit) {
+		showUserAlert("legallimit");
+	}
 
 	// Calculate percentage to user limit
-	var userLimitPercentage = (currentBAC / userLimit) * 10;
+	var userLimitPercentage = (currentBAC / userLimit);
 	writeLog("Percentage to user limit is " + userLimitPercentage);
 
 	// Calculate percentage to legal limit
-	var legalLimitPercentage = (currentBAC / legalLimit) * 10;
+	var legalLimitPercentage = (currentBAC / legalLimit);
 
 	// Make sure we don't expand over the container...
 	if(userLimitPercentage * 100 >= 100) {
@@ -266,7 +318,7 @@ function refreshGUIElements() {
 	$("#counter_num").html(numDrinks);
 
 	// Update BAC display with grabbed value
-	$("#bac_num").html(currentBAC);
+	$("#bac_num").html("Your current BAC is " + currentBAC);
 }
 
 // Adjust user configuration setting
@@ -385,6 +437,19 @@ function runTests() {
 	}
 }
 
+function setAlertBindings() {
+	// Yes and no button click bindings
+	$("#yes_button").click(function() {
+		$("#alertbox").hide();
+		$("#taxilist").show();
+	});
+
+	$("#no_button").click(function() {
+		$("#alertbox").hide();
+	});
+
+}
+
 /*
  * Initialization functions
  * Set click bindings, initial position and visibility, etc.
@@ -425,8 +490,21 @@ function init() {
 	dbManager.loadTable("settings");
 	var settingsList = dbManager.getDatabase();
 	for(key in settingsList) {
-		var frag = "<li>" + key + "</li>";
+		var val = settingsList[key];
+		var keyIn = "<input type=\"text\" class=\"plain\" id=\"" + key + "_input\" value=\"" + val + "\" />";
+		var frag = "<li>" + key + keyIn + "</li>";
 		elem.append(frag);
+	}
+
+	// Add change bindings to all inputs
+	for(settingName in settingsList) {
+		var elem = $("#"+settingName+"_input");
+		elem.change(function() {
+			// Change value in table to new value
+			var val = $(this).val();
+			writeLog("changing value for " + settingName + " to " + val);
+			setConfigurationValue(settingName, val);
+		});
 	}
 
 	// Load all utilities as buttons into utilities flyout

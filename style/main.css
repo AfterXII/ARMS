@@ -1,7 +1,7 @@
  html,body{
    margin: 0;
    padding: 0;
-   font-family: Helvetica;
+   font-family: Helvetica, Tahoma;
  }
  h1,h2,h3,h4{
    margin: 0;
@@ -11,9 +11,16 @@
    width: 320px;
    height: 480px;
    background: #ccc;
+	z-index: 1;
+ }
+ #logo{
+ 	background: #333;
+	color: white;
  }
  #logo h1{
-   text-align: center;
+   text-align: right;
+	opacity: .5;
+	font-size: .8em;
  }
  #counter{
    width: 150px;
@@ -51,11 +58,12 @@
    left: 0;
    top: 380px;
    display: block;
-   height: 100px;
+   //height: 100px;
    width: 320px;
    background: #555;
    text-align: center;
    display: none;
+	z-index: 0;
  }
  .flyoutarrow{
    position: relative;
@@ -66,6 +74,7 @@
    width: 25px;
    background: #555;
    -webkit-transform: rotate(45deg);
+	z-index: -1;
  }
  .flyout ul{
    list-style: none;
@@ -78,6 +87,63 @@
    width: 17%;
    text-align: center;
  }
+ #settings_list li, #utilities_list li{
+ 	display: block;
+ 	width: 100%;
+	text-align: center;
+	height: 20px;
+	padding: 3px 0;
+	clear: left;
+ }
+ #settings_list li:hover, #utilities_list li:hover{
+ 	background: black;
+	color: white;
+ }
+ #settings_list li input{
+ 	float: right;
+ }
  .clear{
    clear: both;
+ }
+ .progress_container{
+ 	width: 200px;
+	padding: 5px 0;
+	border: 1px solid #000;
+	margin: 2px auto;
+	display: block;
+	overflow: hidden;
+ }
+ .progress{
+ 	background: green;
+	display: block;
+	height: 10px;
+	width: 0;
+ }
+ #bac_num{
+ 	padding: 20px 0;
+ 	text-align: center;
+	border-top: 1px solid #333;
+	background: #369;
+ }
+ .alertbox{
+ 	padding: 20px;
+	background: #000;
+	opacity: .7;
+	color: #fff;
+	text-align: justify;
+ 	box-shadow: 0px 4px 5px #333;
+	z-index: 9999;
+	display: none;
+ }
+ .alertbox .button{
+ 	display: block-inline;
+	width: 50px;
+	padding: 5px 0;
+ }
+ #progress{
+ 	padding-top: 20px;
+ 	text-align: center;
+	font-size: .7em;
+	font-weight: bold;
+	border-top: 1px solid #333;
  }
