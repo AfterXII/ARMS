@@ -7,11 +7,19 @@
    margin: 0;
    padding: 0;
  }
+ #phone{
+	display: block;
+ 	width: 368px;
+	height: 716px;
+	background: url('../images/iphone.png') no-repeat center;
+	padding-top: 120px;
+ }
  #wrapper{
    width: 320px;
    height: 480px;
    background: #ccc;
 	z-index: 1;
+	margin: 0 auto;
  }
  #logo{
  	background: #333;
@@ -36,6 +44,7 @@
    background: #ccc;
    //height: 55px;
    width: 320px;
+	margin: 0 auto;
  }
  #mainmenu ul{
    list-style: none;
@@ -55,7 +64,7 @@
  }
  .flyout{
    position: absolute;
-   left: 0;
+   left: 24px;
    top: 380px;
    display: block;
    //height: 100px;

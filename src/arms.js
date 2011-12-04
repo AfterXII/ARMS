@@ -415,7 +415,7 @@ function changeFlyoutVisibility(name) {
 
 		// Position the arrow to be above the current button
 			var x = button.position().left + ( (button.width() / 2) - ( $(".flyoutarrow").width() / 2 ) );
-		flyout.find('div').css('left', x);
+		flyout.find('div').css('left', x - 24);
 	}
 }
 
