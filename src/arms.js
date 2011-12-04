@@ -9,19 +9,22 @@ function FauxBase() {
 	// Beer values
 	this.beer = {
 		"name" 		: "beer",
-		"calories" 	: 150
+		"calories" 	: 150,
+		"grams" 		: 0
 	};
 
 	// Wine values
 	this.wine = {
 		"name" 		: "wine",
-		"calories" 	: 120
+		"calories" 	: 120,
+		"grams" 		: 0
 	};
 
 	// Liquor values
 	this.liquor = {
 		"name" 		: "liquor",
-		"calories" 	: 100
+		"calories" 	: 100,
+		"grams" 		: 0
 	};
 	
 	// Drinks list
@@ -47,6 +50,18 @@ function FauxBase() {
 		"taxiinterval" 		: 30, 		// Integer, minutes
 		"calltaxi" 				: false 		// Boolean
 	};
+
+	this.utilities = {
+		"tools" 	: "1",
+		"histogram" :	"histogram"
+	};
+
+	// Current data for this session
+	this.currentData = {
+		"grams" 		: 0, 	// Grams of alcohol consumed
+		"drinks" 	: 0, 	// Number of drinks consumed
+		"calories" 	: 0 	// Number of calories consumed
+	};
 	
 	this.getDrinks = function() {
 		return this.drinks;
@@ -54,6 +69,14 @@ function FauxBase() {
 
 	this.getSettings = function() {
 		return this.settings;
+	}
+
+	this.getUtilities = function() {
+		return this.utilities;
+	}
+
+	this.getCurrentData = function() {
+		return this.currentData;
 	}
 
 	// Return value on instantiation
@@ -79,6 +102,12 @@ function DatabaseManager() {
 				break;
 			case "settings":
 				this.currentDatabase = this.base.getSettings();
+				break;
+			case "utilities":
+				this.currentDatabase = this.base.getUtilities();
+				break;
+			case "currentData":
+				this.currentDatabase = this.base.getCurrentData();
 				break;
 			default: return false;
 		}
@@ -141,11 +170,32 @@ function addDrink(drinkName) {
 	dbManager.loadTable("drinks");
 
 	drinkName = drinkName.toLowerCase();
+	
+	var drink = dbManager.getValueOf(drinkName);
 
 	// Check if drink is in the "database"
-	if(dbManager.getValueOf(drinkName) != -1) {
+	if(drink != -1) {
 		// Get the value for the entry
+		var calories = drink["calories"];
+		var grams = drink["grams"];
+
+		// Load current data from database
+		var dataDb = new DatabaseManager();
+		dataDb.loadTable("currentData");
+		var curCalories = dataDb.getValueOf("calories");
+		var curGrams = dataDb.getValueOf("grams");
+
+		// Increment values in database
+		dataDb.setValueOf("calories", curCalories + calories);
+		dataDb.setValueOf("grams", curGrams + grams);
+
+		// Refresh the GUI to set progress bars and text elements
+		refreshGUIElements();
 	}
+}
+
+function refreshGUIElements() {
+	alert("yo!");
 }
 
 // Adjust user configuration setting
@@ -162,6 +212,44 @@ function setConfigurationValue(key, value) {
 		return dbManager.setValueOf(key, value);
 	}
 }
+
+// Adjust current data values
+function setCurrentDataValue(key, value) {
+	dbManager = new DatabaseManager();
+
+	dbManager.loadTable("currentData");
+
+	key = key.toLowerCase();
+
+	if(dbManager.getValueOf(key) != -1) {
+		return dbManager.setValueOf(key, value);
+	}
+}
+
+function calculateBAC() {
+	writeLog("Calculating BAC...");
+
+	dbManager = new DatabaseManager();
+	dbManager.loadTable("settings");
+
+	var weight = dbManager.getValueOf("weight");
+	var weightInGrams = (weight / 2.205) * 1000;
+
+	var sex = dbManager.getValueOf("sex").toLowerCase();
+
+	var waterPercent = (sex == "male") ? .58 : .49;
+
+	var bloodInGrams = (weightInGrams * waterPercent);
+
+	dbManager.loadTable("currentData");
+	var gramsAlcoholConsumed = dbManager.getValueOf("grams");
+
+	var BAC = (gramsAlcoholConsumed / bloodInGrams) * 100;
+
+	// Return rounded BAC value
+	return Math.round(BAC * 100) / 100;
+}
+
 
 /*
  * Changes flyout visibility for the particular element
@@ -247,12 +335,34 @@ function init() {
 		changeFlyoutVisibility('utilities');
 	});
 
+	// Drink adding click bindings
+	$("#wine_button").click(function() {
+		addDrink("wine");
+	});
+
+	$("#beer_button").click(function() {
+		addDrink("beer");
+	});
+
+	$("#liquor_button").click(function() {
+		addDrink("liquor");
+	});
+
 	// Load all settings as buttons into settings flyout
 	var elem = $("#settings_list");
 	dbManager = new DatabaseManager();
 	dbManager.loadTable("settings");
 	var settingsList = dbManager.getDatabase();
 	for(key in settingsList) {
+		var frag = "<li>" + key + "</li>";
+		elem.append(frag);
+	}
+
+	// Load all utilities as buttons into utilities flyout
+	var elem = $("#utilities_list");
+	dbManager.loadTable("utilities");
+	var utilitiesList = dbManager.getDatabase();
+	for(key in utilitiesList) {
 		var frag = "<li>" + key + "</li>";
 		elem.append(frag);
 	}
