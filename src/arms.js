@@ -1,82 +1,92 @@
+// Beer values
+beer = {
+	"name" 		: "beer",
+	"calories" 	: 150,
+	"grams" 		: 10
+};
+
+// Wine values
+wine = {
+	"name" 		: "wine",
+	"calories" 	: 120,
+	"grams" 		: 10
+};
+
+// Liquor values
+liquor = {
+	"name" 		: "liquor",
+	"calories" 	: 100,
+	"grams" 		: 10
+};
+
+// Drinks list
+drinks = {
+	"beer" 	: this.beer,
+	"wine" 	: this.wine,
+	"liquor" : this.liquor
+};
+
+// User settings
+// All default limit values are the legal limit
+// All settings deemed to be a safety feature are true by default
+settings = {
+	"weight" 				: "", 		// Integer
+	"sex" 					: "", 		// String
+	"name" 					: "", 		// String
+	"contactlocklimit" 	: 0.8, 		// Float, BAC value
+	"calltaxionlimit" 	: true, 		// Boolean
+	"calltaxilimit" 		: 0.8, 		// Float, BAC value
+	"usegps" 				: true, 		// Boolean
+	"baccalculate" 		: true, 		// Boolean
+	"cachetaxi" 			: true, 		// Boolean
+	"taxiinterval" 		: 30, 		// Integer, minutes
+	"calltaxi" 				: false 		// Boolean
+};
+
+utilities = {
+	"tools" 	: "1",
+	"histogram" :	"histogram"
+};
+
+// Current data for this session
+currentData = {
+	"grams" 		: 1, 	// Grams of alcohol consumed
+	"drinks" 	: 1, 	// Number of drinks consumed
+	"calories" 	: 1, 	// Number of calories consumed
+	"bac" 		: 0 	// Current BAC
+};
+
+//
+// Start actual ARMS module code
+//
+
 function writeLog(log) {
-	return;
+	//return;
 	frag = '<p>' + log + '</p>';
 	$("#log").append(frag);
 }
 
 // Our global "database"
 function FauxBase() {
-	// Beer values
-	this.beer = {
-		"name" 		: "beer",
-		"calories" 	: 150,
-		"grams" 		: 0
-	};
-
-	// Wine values
-	this.wine = {
-		"name" 		: "wine",
-		"calories" 	: 120,
-		"grams" 		: 0
-	};
-
-	// Liquor values
-	this.liquor = {
-		"name" 		: "liquor",
-		"calories" 	: 100,
-		"grams" 		: 0
-	};
-	
-	// Drinks list
-	this.drinks = {
-		"beer" 	: this.beer,
-		"wine" 	: this.wine,
-		"liquor" : this.liquor
-	};
-
-	// User settings
-	// All default limit values are the legal limit
-	// All settings deemed to be a safety feature are true by default
-	this.settings = {
-		"weight" 				: "", 		// Integer
-		"sex" 					: "", 		// String
-		"name" 					: "", 		// String
-		"contactlocklimit" 	: 0.8, 		// Float, BAC value
-		"calltaxionlimit" 	: true, 		// Boolean
-		"calltaxilimit" 		: 0.8, 		// Float, BAC value
-		"usegps" 				: true, 		// Boolean
-		"baccalculate" 		: true, 		// Boolean
-		"cachetaxi" 			: true, 		// Boolean
-		"taxiinterval" 		: 30, 		// Integer, minutes
-		"calltaxi" 				: false 		// Boolean
-	};
-
-	this.utilities = {
-		"tools" 	: "1",
-		"histogram" :	"histogram"
-	};
-
-	// Current data for this session
-	this.currentData = {
-		"grams" 		: 0, 	// Grams of alcohol consumed
-		"drinks" 	: 0, 	// Number of drinks consumed
-		"calories" 	: 0 	// Number of calories consumed
-	};
 	
 	this.getDrinks = function() {
-		return this.drinks;
+		//return this.drinks;
+		return drinks;
 	}
 
 	this.getSettings = function() {
-		return this.settings;
+		//return this.settings;
+		return settings;
 	}
 
 	this.getUtilities = function() {
-		return this.utilities;
+		//return this.utilities;
+		return utilities;
 	}
 
 	this.getCurrentData = function() {
-		return this.currentData;
+		//return this.currentData;
+		return currentData;
 	}
 
 	// Return value on instantiation
@@ -106,7 +116,7 @@ function DatabaseManager() {
 			case "utilities":
 				this.currentDatabase = this.base.getUtilities();
 				break;
-			case "currentData":
+			case "currentdata":
 				this.currentDatabase = this.base.getCurrentData();
 				break;
 			default: return false;
@@ -118,6 +128,14 @@ function DatabaseManager() {
 	// Get the current database, useful for testing or list processing
 	this.getDatabase = function() {
 		return this.currentDatabase;
+	};
+
+	// Print current database
+	this.printDatabase = function() {
+		writeLog("Printing database...");
+		for(key in this.currentDatabase) {
+			writeLog(key + " => " + this.currentDatabase[key]);
+		}
 	};
 
 	// Get the value of a particular entry in the table
@@ -132,7 +150,6 @@ function DatabaseManager() {
 		var ret = -1;
 
 		if(this.currentDatabase != null) {
-			writeLog("Not null");
 			for(key in this.currentDatabase) {
 				if(key == valueName) {
 					ret = this.currentDatabase[key];
@@ -146,11 +163,11 @@ function DatabaseManager() {
 
 	// Set value of a particular entry in the table
 	// Returns false if key not found, true if setting changed
-	this.setValueOf = function(key, value) {
+	this.setValueOf = function(kee, value) {
 		// Check that we've loaded a database first
 		if(this.currentDatabase != null) {
 			for(key in this.currentDatabase) {
-				if(key == valueName) {
+				if(key == kee) {
 					this.currentDatabase[key] = value;
 					return true;
 				}
@@ -179,15 +196,22 @@ function addDrink(drinkName) {
 		var calories = drink["calories"];
 		var grams = drink["grams"];
 
+		writeLog("Calories: " + calories + ", grams: " + grams);
+
 		// Load current data from database
 		var dataDb = new DatabaseManager();
 		dataDb.loadTable("currentData");
 		var curCalories = dataDb.getValueOf("calories");
 		var curGrams = dataDb.getValueOf("grams");
+		var curDrinks = dataDb.getValueOf("drinks");
+
+		writeLog("Current calories: " + curCalories + ", current grams: " + curGrams);
 
 		// Increment values in database
 		dataDb.setValueOf("calories", curCalories + calories);
 		dataDb.setValueOf("grams", curGrams + grams);
+		dataDb.setValueOf("bac", calculateBAC());
+		dataDb.setValueOf("drinks", curDrinks + 1);
 
 		// Refresh the GUI to set progress bars and text elements
 		refreshGUIElements();
@@ -195,7 +219,46 @@ function addDrink(drinkName) {
 }
 
 function refreshGUIElements() {
-	alert("yo!");
+	writeLog("Refreshing GUI elements...");
+	var dbManager = new DatabaseManager();
+
+	// Load settings table, get user defined BAC limit
+	dbManager.loadTable("settings");
+	var userLimit = dbManager.getValueOf("calltaxilimit");
+	var legalLimit = 0.8;
+
+	// Load data table, get current BAC and # of drinks
+	//dbManager = new DatabaseManager();
+	dbManager.loadTable("currentdata");
+	var currentBAC = dbManager.getValueOf("bac");
+	writeLog("Current BAC is " + currentBAC);
+	var numDrinks = dbManager.getValueOf("drinks");
+	writeLog("Refreshing GUI elements. BAC is " + currentBAC + " and # drinks is " + numDrinks);
+
+	// Calculate percentage to user limit
+	var userLimitPercentage = userLimit / currentBAC;
+
+	// Calculate percentage to legal limit
+	var legalLimitPercentage = legalLimit / currentBAC;
+
+	// Update both progress bars
+	var progressWidth; 	// Width of progress bar container
+	var width; 				// New width for progress bar (based on percentage)
+	
+	var userLimProgressElement = $("#userlim_progress");
+	progressWidth = $("#userlim_progress_container").width();
+	width = progressWidth * userLimitPercentage;
+	userLimProgressElement.css("width", width);
+
+	var legalLimProgressElement = $("#legallim_progress");
+	progressWidth = $("#legallim_progress_container").width();
+	width = progressWidth * legalLimitPercentage;
+	legalLimProgressElement.css("width", width);
+
+	// Update # of drinks with grabbed value
+	$("#counter_num").html(numDrinks);
+
+	// Update BAC display with grabbed value
 }
 
 // Adjust user configuration setting
@@ -217,7 +280,7 @@ function setConfigurationValue(key, value) {
 function setCurrentDataValue(key, value) {
 	dbManager = new DatabaseManager();
 
-	dbManager.loadTable("currentData");
+	dbManager.loadTable("currentdata");
 
 	key = key.toLowerCase();
 
@@ -241,7 +304,7 @@ function calculateBAC() {
 
 	var bloodInGrams = (weightInGrams * waterPercent);
 
-	dbManager.loadTable("currentData");
+	dbManager.loadTable("currentdata");
 	var gramsAlcoholConsumed = dbManager.getValueOf("grams");
 
 	var BAC = (gramsAlcoholConsumed / bloodInGrams) * 100;
@@ -320,7 +383,7 @@ function runTests() {
 */
 function init() {
 	// Run tests
-	runTests();
+	//runTests();
 
 	// Flyout click bindings
 	$("#plus_one_button").click(function() {
