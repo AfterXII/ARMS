@@ -442,6 +442,9 @@ function setAlertBindings() {
 	$("#yes_button").click(function() {
 		$("#alertbox").hide();
 		$("#taxilist").show();
+		$("#taxilist").click(function() {
+			$(this).hide();
+		});
 	});
 
 	$("#no_button").click(function() {
