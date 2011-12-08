@@ -499,7 +499,7 @@ function init() {
 		var frag = "<li>" + key + keyIn + "</li>";
 		elem.append(frag);
 	}
-	//Temporary bottom padding display fix, due to code clusterfuck
+	//Temporary bottom padding display fix
 	elem.append("<li style=\"background:#555;\">&nbsp;</li>");
 
 	// Add change bindings to all inputs
@@ -521,7 +521,7 @@ function init() {
 		var frag = "<li>" + key + "</li>";
 		elem.append(frag);
 	}
-	//Temporary bottom padding display fix, due to code clusterfuck
+	//Temporary bottom padding display fix
 	elem.append("<li style=\"background:#555;\">&nbsp;</li>");
 
 	// Load in all current settings
