@@ -1,7 +1,8 @@
- html,body{
+html,body{
    margin: 0;
    padding: 0;
-   font-family: Helvetica, Tahoma;
+   font-family: 'EurostileRegular', Helvetica, Tahoma;
+   color:white;
  }
  h1,h2,h3,h4{
    margin: 0;
@@ -17,23 +18,27 @@
  #wrapper{
    width: 320px;
    height: 480px;
-   background: #ccc;
+   background: #27343E;
 	z-index: 1;
 	margin: 0 auto;
  }
  #logo{
- 	background: #333;
+ 	background: #555;
 	color: white;
+	padding:0 10px;
  }
  #logo h1{
    text-align: right;
 	opacity: .5;
 	font-size: .8em;
+	letter-spacing:1px;
  }
  #counter{
-   width: 150px;
+   position:relative;
+   top:20px;
+   width: 200px;
    margin: 0 auto;
-   font-size: 3em;
+   font-size: 4em;
    text-align: center;
  }
  #countertext{
@@ -41,38 +46,49 @@
    font-size: .6em;
  }
  #mainmenu{
-   background: #ccc;
+	color:black;
+	border-top:1px solid #b1b1b1;
+   background: #DEDEDE;
    //height: 55px;
    width: 320px;
 	margin: 0 auto;
+	/* Inside Button Shading */
+	-moz-box-shadow: inset 0px -5px 20px #888;
+	-webkit-box-shadow: inset 0px -5px 20px #888;
+	box-shadow: inset 0px -5px 20px #888;
  }
  #mainmenu ul{
-   list-style: none;
-   margin: 0 auto;
+	padding:0;
+	margin: 0;
+	list-style: none;
+	
  }
  #mainmenu ul li{
    display: block-inline;
    float: left;
-   //height: 55px;
    padding: 20px 0;
-   //width: 75px;
-   width: 31%;
    text-align: center;
  }
  #mainmenu ul li.selected{
-   background: green;
+   background: #A7EAA7;
+   -moz-box-shadow: inset 0px -5px 20px #888;
+	-webkit-box-shadow: inset 0px -5px 20px #888;
+	box-shadow: inset 0px -5px 20px #888;
  }
  .flyout{
+	border-radius: 25px 25px 5px 5px; 
+	-moz-border-radius: 25px 25px 5px 5px; 
+	-webkit-border-radius: 25px 25px 5px 5px;
+   color:white;
    position: absolute;
-   left: 24px;
-   top: 380px;
    display: block;
-   //height: 100px;
    width: 320px;
    background: #555;
-   text-align: center;
    display: none;
-	z-index: 0;
+   z-index: 0;
+   margin:0;
+   opacity:.97;
+   
  }
  .flyoutarrow{
    position: relative;
@@ -82,62 +98,112 @@
    height: 25px;
    width: 25px;
    background: #555;
+   border-bottom:1px solid #b1b1b1;
+   border-right:1px solid #b1b1b1;
+   -moz-transform: rotate(45deg);
    -webkit-transform: rotate(45deg);
 	z-index: -1;
  }
  .flyout ul{
    list-style: none;
-   margin: 0 auto;
+   margin: 0;
+   padding:0;
  }
  .flyout ul li{
    display: block-inline;
    float: left;
-   padding: 20px; 0;
-   width: 17%;
+   margin:0 auto;
+   width: 106px;
+   padding:20px 0;
    text-align: center;
  }
+ .flyout ul li:hover{
+	background: #333;
+	color: white;
+	border-radius: 25px 25px 5px 5px; 
+	-moz-border-radius: 25px 25px 5px 5px; 
+	-webkit-border-radius: 25px 25px 5px 5px;
+ }
+ 
+ #settings_list{
+	text-transform:capitalize;
+ }
  #settings_list li, #utilities_list li{
+	
  	display: block;
- 	width: 100%;
-	text-align: center;
+ 	width: 280px;
 	height: 20px;
-	padding: 3px 0;
+	padding: 3px 20px;
 	clear: left;
  }
+ #settings_list ul{
+	padding:0;
+	margin: 0;
+ }
  #settings_list li:hover, #utilities_list li:hover{
- 	background: black;
+ 	background: #333;
 	color: white;
+	border-radius: 0; 
+	-moz-border-radius: 0; 
+	-webkit-border-radius: 0;
  }
  #settings_list li input{
  	float: right;
+ }
+ #utilities_list{
+	text-transform:capitalize;
+ }
+ #settings_button{
+	width:114px;
+	border-right:1px solid #b1b1b1;
+ }
+ #plus_one_button{
+	width:90px;
+ }
+ #utilities_button{
+	width:114px;
+	border-left:1px solid #b1b1b1;
  }
  .clear{
    clear: both;
  }
  .progress_container{
  	width: 200px;
-	padding: 5px 0;
-	border: 1px solid #000;
-	margin: 2px auto;
+	border: 1px solid white;
+	margin: 5px auto;
+	margin-bottom:10px;
 	display: block;
 	overflow: hidden;
+	border-radius: 50px; 
+	-moz-border-radius: 50px; 
+	-webkit-border-radius: 50px; 
  }
  .progress{
- 	background: green;
+ 	background: #A7EAA7;
+	opacity:.9;
 	display: block;
-	height: 10px;
 	width: 0;
+	height:25px;
  }
  #bac_num{
+	position:relative;
+	top:40px;
  	padding: 20px 0;
  	text-align: center;
-	border-top: 1px solid #333;
-	background: #369;
+	font-weight:bold;
+	font-size:1.5em;
+	border-top:1px solid #b1b1b1;
  }
+	#bac_num span{
+		color:white;
+	}
  .alertbox{
+	position:absolute;
+	top:400px;
+	width:280px;
  	padding: 20px;
-	background: #000;
-	opacity: .7;
+	background: #222;
+	opacity: .9;
 	color: #fff;
 	text-align: justify;
  	box-shadow: 0px 4px 5px #333;
@@ -150,9 +216,9 @@
 	padding: 5px 0;
  }
  #progress{
- 	padding-top: 20px;
+	position:relative;
+	top:50px;
  	text-align: center;
-	font-size: .7em;
-	font-weight: bold;
-	border-top: 1px solid #333;
+	font-size: 1em;
+	padding-top:10px;
  }
