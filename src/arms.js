@@ -44,8 +44,10 @@ settings = {
 };
 
 utilities = {
-	"tools" 	: "",
-	"histogram" :	""
+	"calorie calculator" 	: "",
+	"drink schedule" 	: "",
+	"histogram" 	: "",
+	"tests" :	""
 };
 
 yesNoButtons = "<div class=\"button\" id=\"yes_button\">Yes</div><div class=\"button\" id=\"no_button\">No</div>";
@@ -259,6 +261,11 @@ function showUserAlert(alertType) {
 
 function refreshGUIElements() {
 	writeLog("Refreshing GUI elements...");
+
+	// We've just completed an action; close all flyouts
+	$(".flyout").hide();
+	$(".btn").removeClass('selected');
+
 	var dbManager = new DatabaseManager();
 
 	// Load settings table, get user defined BAC limit
