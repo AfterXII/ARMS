@@ -298,6 +298,7 @@ function refreshGUIElements() {
 	if(legalLimitPercentage * 100 >= 100) {
 		legalLimitPercentage = 100;
 		$("#legallim_progress").css("background-color", "red");
+		$("#bac_num span").css("color", "red");
 	}
 
 	// Update both progress bars
@@ -318,7 +319,7 @@ function refreshGUIElements() {
 	$("#counter_num").html(numDrinks);
 
 	// Update BAC display with grabbed value
-	$("#bac_num").html("Your current BAC is " + currentBAC);
+	$("#bac_num").html("Your current <span>BAC</span> is " + "<span>" + currentBAC + "</span>");
 }
 
 // Adjust user configuration setting
@@ -498,6 +499,8 @@ function init() {
 		var frag = "<li>" + key + keyIn + "</li>";
 		elem.append(frag);
 	}
+	//Temporary bottom padding display fix
+	elem.append("<li style=\"background:#555;\">&nbsp;</li>");
 
 	// Add change bindings to all inputs
 	for(settingName in settingsList) {
@@ -518,6 +521,8 @@ function init() {
 		var frag = "<li>" + key + "</li>";
 		elem.append(frag);
 	}
+	//Temporary bottom padding display fix
+	elem.append("<li style=\"background:#555;\">&nbsp;</li>");
 
 	// Load in all current settings
 	refreshGUIElements();
