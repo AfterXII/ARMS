@@ -222,6 +222,10 @@ html,body{
 	z-index: 9999;
 	display: none;
  }
+	.alertbox em{
+		margin-left:20px;
+		font-size:.9em;
+	}
  .alertbox .button{
  	display: block-inline;
 	width: 50px;
