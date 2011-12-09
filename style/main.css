@@ -13,12 +13,13 @@ html,body{
  	width: 368px;
 	height: 716px;
 	background: url('../images/iphone.png') no-repeat center;
-	padding-top: 120px;
+	padding-top: 180px;
  }
  #wrapper{
    width: 320px;
-   height: 480px;
-   background: #27343E;
+   height: 460px;
+   background: #27343E url('../images/bg.jpg') no-repeat center;
+	background-size: cover;
 	z-index: 1;
 	margin: 0 auto;
  }
@@ -40,6 +41,8 @@ html,body{
    margin: 0 auto;
    font-size: 4em;
    text-align: center;
+	color: #000;
+	opacity: .5;
  }
  #countertext{
    display: block;
@@ -184,6 +187,8 @@ html,body{
 	display: block;
 	width: 0;
 	height:25px;
+	border-radius: 50px;
+	max-width: 200px;
  }
  #bac_num{
 	position:relative;

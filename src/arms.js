@@ -259,6 +259,11 @@ function showUserAlert(alertType) {
 
 function refreshGUIElements() {
 	writeLog("Refreshing GUI elements...");
+
+	// We've just completed an action; close all flyouts
+	$(".flyout").hide();
+	$(".btn").removeClass('selected');
+
 	var dbManager = new DatabaseManager();
 
 	// Load settings table, get user defined BAC limit
